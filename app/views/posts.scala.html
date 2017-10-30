@@ -1,0 +1,37 @@
+@(posts: List[service.ContentService.DayPost])
+
+<?xml version='1.0' encoding='utf-8'?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pl-PL" xml:lang="pl-PL">
+<head>
+  <title>On Jest</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="stylesheet.css" rel="stylesheet" type="text/css"/>
+  <link href="page_styles.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+
+<div id="toc">
+  <h2>
+    Spis treści <br />
+  </h2>
+  <ul>
+    @for(post <- posts) {
+      <li><a href='#@post.formattedDate'>@post.formattedDate</a></li>
+    }
+  </ul>
+</div>
+<div class="pagebreak"></div>
+<p><a href="http://www.onjest.pl">http://www.onjest.pl</a></p>
+<p>Wspólnota Ruchu Światło-Życie</p>
+<h1>Lectio Divina</h1>
+<hr/>
+<hr/>
+<div class="pagebreak"></div>
+
+@for(post <- posts) {
+<h2 id=@post.formattedDate>@post.title</h2><hr/>
+@Html(post.content)
+<div class="pagebreak"></div>
+}
+
+</body></html>

@@ -1,35 +1,40 @@
 package controllers
 
-import play.api._
+import java.util
+
+import service.ContentService
 import play.api.mvc._
-import play.api.cache.Cache
-import play.api.Play.current
+import play.api.libs.json._
+import play.api.cache._
+import javax.inject.Inject
 
-import play.api.db._
+import scala.concurrent.duration._
 
-object Application extends Controller {
+class Application  @Inject() (cache: CacheApi) extends Controller {
+  implicit val DayPostsWrites = Json.writes[service.ContentService.DayPost]
+
 
   def index = Action {
-    Ok(views.html.index(null))
+    val from = org.joda.time.DateTime.now().plusDays(1).withDayOfWeek(1).toLocalDate
+    val posts = getPosts(from)
+    Ok (views.html.posts (posts) )
   }
 
-  def db = Action {
-    var out = ""
-    val conn = DB.getConnection()
-    try {
-      val stmt = conn.createStatement
-
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)")
-      stmt.executeUpdate("INSERT INTO ticks VALUES (now())")
-
-      val rs = stmt.executeQuery("SELECT tick FROM ticks")
-
-      while (rs.next) {
-        out += "Read from DB: " + rs.getTimestamp("tick") + "\n"
-      }
-    } finally {
-      conn.close()
+  def weekPosts(date: String) = Action {
+    var from = org.joda.time.DateTime.now().plusDays(1).withDayOfWeek(1).toLocalDate
+    if(!date.isEmpty){
+      from = new org.joda.time.LocalDate(date).withDayOfWeek(1)
     }
-    Ok(out)
+
+    val posts = getPosts(from)
+    Ok (views.html.posts (posts) )
+  }
+
+  def getPosts(from: org.joda.time.LocalDate):List[service.ContentService.DayPost] = {
+    val posts: List[ContentService.DayPost] = cache.getOrElse[List[service.ContentService.DayPost]] (s"posts-$from") {
+      ContentService.getDayPosts(from);
+    }
+    cache.set (s"posts-$from", posts, 5.hours)
+    return posts
   }
 }
