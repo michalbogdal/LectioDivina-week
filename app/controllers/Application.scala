@@ -14,18 +14,11 @@ class Application  @Inject() (cache: CacheApi) extends Controller {
   implicit val DayPostsWrites = Json.writes[service.ContentService.DayPost]
 
 
-  def index = Action {
-    val from = org.joda.time.DateTime.now().plusDays(1).withDayOfWeek(1).toLocalDate
-    val posts = getPosts(from)
-    Ok (views.html.posts (posts) )
-  }
-
-  def weekPosts(date: String) = Action {
+  def index(date: String) = Action {
     var from = org.joda.time.DateTime.now().plusDays(1).withDayOfWeek(1).toLocalDate
     if(!date.isEmpty){
       from = new org.joda.time.LocalDate(date).withDayOfWeek(1)
     }
-
     val posts = getPosts(from)
     Ok (views.html.posts (posts) )
   }

@@ -10,6 +10,7 @@ import spray.json._
 import DefaultJsonProtocol._
 import spray.http._
 import spray.client.pipelining._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object ContentService {
 
