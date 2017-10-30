@@ -10,24 +10,20 @@
 </head>
 <body>
 
-<div id="toc">
-  <h2>
-    Spis treści <br />
-  </h2>
-  <ul>
-    @for(post <- posts) {
-      <li><a href='#@post.formattedDate'>@post.formattedDate</a></li>
-    }
-  </ul>
-</div>
-<div class="pagebreak"></div>
-
-<h2>Lectio Divina</h2>
-<h1>Modlitwa ze Słowem Bożym</h1>
+<h1>Lectio Divina</h1>
+<h2>Modlitwa ze Słowem Bożym</h2>
 <p>Wspólnota Ruchu Światło-Życie</p>
 <p><a href="http://www.onjest.pl">http://www.onjest.pl</a></p>
 <p>rozważania na tydz @posts.head.formattedDate - @posts.last.formattedDate </p>
 <hr/>
+<div id="toc">
+  <ul>
+    @for(post <- posts) {
+    <li><a href='#@post.formattedDate'>@post.formattedDate</a></li>
+    }
+  </ul>
+</div>
+<div class="pagebreak"></div>
 <hr/>
 <div class="pagebreak"></div>
 
